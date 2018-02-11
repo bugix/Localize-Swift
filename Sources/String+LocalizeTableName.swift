@@ -10,7 +10,7 @@ import Foundation
 
 /// tableName friendly extension
 public extension String {
-    
+
     /**
      Swift 2 friendly localization syntax, replaces NSLocalizedString.
      
@@ -22,7 +22,7 @@ public extension String {
     func localized(using tableName: String?) -> String {
         return localized(using: tableName, in: .main)
     }
-    
+
     /**
      Swift 2 friendly localization syntax with format arguments, replaces String(format:NSLocalizedString).
      
@@ -36,7 +36,7 @@ public extension String {
     func localizedFormat(arguments: CVarArg..., using tableName: String?) -> String {
         return String(format: localized(using: tableName), arguments: arguments)
     }
-    
+
     /**
      Swift 2 friendly plural localization syntax with a format argument.
      
@@ -48,7 +48,7 @@ public extension String {
      - returns: Pluralized localized string.
      */
     func localizedPlural(argument: CVarArg, using tableName: String?) -> String {
-        return NSString.localizedStringWithFormat(localized(using: tableName) as NSString, argument) as String
+        return String.localizedStringWithFormat(localized(using: tableName), argument)
     }
-    
+
 }

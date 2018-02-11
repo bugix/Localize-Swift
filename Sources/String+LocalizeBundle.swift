@@ -10,7 +10,7 @@ import Foundation
 
 /// bundle friendly extension
 public extension String {
-    
+
     /**
      Swift 2 friendly localization syntax, replaces NSLocalizedString.
      
@@ -22,7 +22,7 @@ public extension String {
     func localized(in bundle: Bundle?) -> String {
         return localized(using: nil, in: bundle)
     }
-    
+
     /**
      Swift 2 friendly localization syntax with format arguments, replaces String(format:NSLocalizedString).
      
@@ -36,7 +36,7 @@ public extension String {
     func localizedFormat(arguments: CVarArg..., in bundle: Bundle?) -> String {
         return String(format: localized(in: bundle), arguments: arguments)
     }
-    
+
     /**
      Swift 2 friendly plural localization syntax with a format argument.
      
@@ -48,7 +48,7 @@ public extension String {
      - returns: Pluralized localized string.
      */
     func localizedPlural(argument: CVarArg, in bundle: Bundle?) -> String {
-        return NSString.localizedStringWithFormat(localized(in: bundle) as NSString, argument) as String
+        return String.localizedStringWithFormat(localized(in: bundle), argument)
     }
-    
+
 }

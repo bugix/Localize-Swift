@@ -10,7 +10,7 @@ import Foundation
 
 /// bundle & tableName friendly extension
 public extension String {
-    
+
     /**
      Swift 2 friendly localization syntax, replaces NSLocalizedString.
      
@@ -23,18 +23,17 @@ public extension String {
      - returns: The localized string.
      */
     func localized(using tableName: String?, in bundle: Bundle?) -> String {
-        let bundle: Bundle = bundle ?? .main
+        let bundle = bundle ?? .main
         if let path = bundle.path(forResource: Localize.currentLanguage, ofType: "lproj"),
             let bundle = Bundle(path: path) {
             return bundle.localizedString(forKey: self, value: nil, table: tableName)
-        }
-        else if let path = bundle.path(forResource: LCLBaseBundle, ofType: "lproj"),
+        } else if let path = bundle.path(forResource: LCLBaseBundle, ofType: "lproj"),
             let bundle = Bundle(path: path) {
             return bundle.localizedString(forKey: self, value: nil, table: tableName)
         }
         return self
     }
-    
+
     /**
      Swift 2 friendly localization syntax with format arguments, replaces String(format:NSLocalizedString).
      
@@ -51,7 +50,7 @@ public extension String {
     func localizedFormat(arguments: CVarArg..., using tableName: String?, in bundle: Bundle?) -> String {
         return String(format: localized(using: tableName, in: bundle), arguments: arguments)
     }
-    
+
     /**
      Swift 2 friendly plural localization syntax with a format argument.
      
@@ -66,7 +65,7 @@ public extension String {
      - returns: Pluralized localized string.
      */
     func localizedPlural(argument: CVarArg, using tableName: String?, in bundle: Bundle?) -> String {
-        return NSString.localizedStringWithFormat(localized(using: tableName, in: bundle) as NSString, argument) as String
+        return String.localizedStringWithFormat(localized(using: tableName, in: bundle), argument)
     }
-    
+
 }

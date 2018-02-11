@@ -9,18 +9,18 @@ class GenStrings {
     let acceptedFileExtensions = ["swift"]
     let excludedFolderNames = ["Carthage"]
     let excludedFileNames = ["genstrings.swift"]
-    var regularExpresions = [String:NSRegularExpression]()
+    var regularExpresions = [String: NSRegularExpression]()
 
     let localizedRegex = "(?<=\")([^\"]*)(?=\".(localized|localizedFormat))|(?<=(Localized|NSLocalizedString)\\(\")([^\"]*?)(?=\")"
 
     enum GenstringsError: Error {
-        case Error
+        case error
     }
 
     // Performs the genstrings functionality
     func perform(path: String? = nil) {
         let directoryPath = path ?? fileManager.currentDirectoryPath
-        let rootPath = URL(fileURLWithPath:directoryPath)
+        let rootPath = URL(fileURLWithPath: directoryPath)
         let allFiles = fetchFilesInFolder(rootPath: rootPath)
         // We use a set to avoid duplicates
         var localizableStrings = Set<String>()
@@ -50,23 +50,21 @@ class GenStrings {
         return Set<String>()
     }
 
-    //MARK: Regex
+    // MARK: Regex
 
     func regexWithPattern(pattern: String) throws -> NSRegularExpression {
         var safeRegex = regularExpresions
         if let regex = safeRegex[pattern] {
             return regex
-        }
-        else {
+        } else {
             do {
                 let currentPattern: NSRegularExpression
-                currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpression.Options.caseInsensitive)
+                currentPattern =  try NSRegularExpression(pattern: pattern, options: NSRegularExpression.Options.caseInsensitive)
                 safeRegex.updateValue(currentPattern, forKey: pattern)
                 regularExpresions = safeRegex
                 return currentPattern
-            }
-            catch {
-                throw GenstringsError.Error
+            } catch {
+                throw GenstringsError.error
             }
         }
     }
@@ -80,13 +78,12 @@ class GenStrings {
             let stringRange = NSMakeRange(0, nsString.length)
             let matches = currentPattern.matches(in: internalString, options: [], range: stringRange)
             return matches
-        }
-        catch {
-            throw GenstringsError.Error
+        } catch {
+            throw GenstringsError.error
         }
     }
 
-    //MARK: File manager
+    // MARK: File manager
 
     func fetchFilesInFolder(rootPath: URL) -> [URL] {
         var files = [URL]()
@@ -96,15 +93,15 @@ class GenStrings {
                 let stringPath = urlPath.path
                 let lastPathComponent = urlPath.lastPathComponent
                 let pathExtension = urlPath.pathExtension
-                var isDir : ObjCBool = false
-                if fileManager.fileExists(atPath: stringPath, isDirectory:&isDir) {
+                var isDir: ObjCBool = false
+                if fileManager.fileExists(atPath: stringPath, isDirectory: &isDir) {
                     if isDir.boolValue {
                         if !excludedFolderNames.contains(lastPathComponent) {
                             let dirFiles = fetchFilesInFolder(rootPath: urlPath)
                             files.append(contentsOf: dirFiles)
                         }
                     } else {
-                        if acceptedFileExtensions.contains(pathExtension) && !excludedFileNames.contains(lastPathComponent)  {
+                        if acceptedFileExtensions.contains(pathExtension) && !excludedFileNames.contains(lastPathComponent) {
                             files.append(urlPath)
                         }
                     }
